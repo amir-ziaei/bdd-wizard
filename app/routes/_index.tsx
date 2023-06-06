@@ -1,141 +1,263 @@
+import * as React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
 
-import { useOptionalUser } from "~/utils";
+export const meta: V2_MetaFunction = () => [{ title: "BDD Wizard" }];
 
-export const meta: V2_MetaFunction = () => [{ title: "Remix Notes" }];
+const KEYWORDS = ["Given", "Only", "Then", "When", "And", "But"] as const;
+
+type Field = {
+  id: string;
+  keyword: (typeof KEYWORDS)[number];
+  description: string;
+};
 
 export default function Index() {
-  const user = useOptionalUser();
+  const [title, setTitle] = React.useState("");
+  const [fields, setFields] = React.useState<Array<Field>>([
+    {
+      id: "1",
+      keyword: "Given",
+      description: "",
+    },
+  ]);
+  const [isPreview, togglePreviewSwitch] = React.useReducer(
+    (state) => !state,
+    false
+  );
+  const [hasJustCopied, setHasJustCopied] = React.useState(false);
+
+  const handleFieldChange = (field: Field) => {
+    setFields((fields) => {
+      const index = fields.findIndex((f) => f.id === field.id);
+      if (index === -1) {
+        return [...fields, field];
+      }
+      return [
+        ...fields.slice(0, index),
+        field,
+        ...fields.slice(index + 1, fields.length),
+      ];
+    });
+  };
+
+  const addNewField = () => {
+    setFields((fields) => [
+      ...fields,
+      {
+        id: Math.random().toString(),
+        keyword: "Given",
+        description: "",
+      },
+    ]);
+  };
+
+  const copyToClipboard = () => {
+    const text = `{panel:title=${title}}\n${fields
+      .map((field) => `*${field.keyword}* ${field.description}`)
+      .join("\n")}\n{panel}`;
+    navigator.clipboard.writeText(text);
+    setHasJustCopied(true);
+  };
+
+  React.useEffect(() => {
+    if (!hasJustCopied) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      setHasJustCopied(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [hasJustCopied]);
+
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
-      <div className="relative sm:pb-16 sm:pt-8">
-        <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
-            <div className="absolute inset-0">
-              <img
-                className="h-full w-full object-cover"
-                src="https://user-images.githubusercontent.com/1500684/157774694-99820c51-8165-4908-a031-34fc371ac0d6.jpg"
-                alt="Sonic Youth On Stage"
+    <main className="container">
+      <div className="grid">
+        <section>
+          <form>
+            <label htmlFor="title">
+              Scenario title
+              <input
+                type="text"
+                id="title"
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="What is the scenario about?"
               />
-              <div className="absolute inset-0 bg-[color:rgba(254,204,27,0.5)] mix-blend-multiply" />
-            </div>
-            <div className="relative px-4 pb-8 pt-16 sm:px-6 sm:pb-14 sm:pt-24 lg:px-8 lg:pb-20 lg:pt-32">
-              <h1 className="text-center text-6xl font-extrabold tracking-tight sm:text-8xl lg:text-9xl">
-                <span className="block uppercase text-yellow-500 drop-shadow-md">
-                  Indie Stack
-                </span>
-              </h1>
-              <p className="mx-auto mt-6 max-w-lg text-center text-xl text-white sm:max-w-3xl">
-                Check the README.md file for instructions on how to get this
-                project deployed.
-              </p>
-              <div className="mx-auto mt-10 max-w-sm sm:flex sm:max-w-none sm:justify-center">
-                {user ? (
-                  <Link
-                    to="/notes"
-                    className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                  >
-                    View Notes for {user.email}
-                  </Link>
-                ) : (
-                  <div className="space-y-4 sm:mx-auto sm:inline-grid sm:grid-cols-2 sm:gap-5 sm:space-y-0">
-                    <Link
-                      to="/join"
-                      className="flex items-center justify-center rounded-md border border-transparent bg-white px-4 py-3 text-base font-medium text-yellow-700 shadow-sm hover:bg-yellow-50 sm:px-8"
-                    >
-                      Sign up
-                    </Link>
-                    <Link
-                      to="/login"
-                      className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
-                    >
-                      Log In
-                    </Link>
+            </label>
+            {fields.map((field) => (
+              <FieldInput
+                key={field.id}
+                value={field}
+                onChange={handleFieldChange}
+              />
+            ))}
+          </form>
+          <button onClick={addNewField}>Add a field</button>
+        </section>
+        <section>
+          <label htmlFor="preview-switch">
+            <input
+              type="checkbox"
+              id="preview-switch"
+              role="switch"
+              onChange={togglePreviewSwitch}
+            />
+            Preview
+          </label>
+          {isPreview ? (
+            <article
+              style={{
+                margin: 0,
+                paddingBottom: "calc(var(--block-spacing-vertical)*0.01)",
+              }}
+            >
+              <header
+                style={{
+                  padding:
+                    "calc(var(--block-spacing-vertical) * .2) var(--block-spacing-horizontal)",
+                  marginBottom: "calc(var(--block-spacing-vertical) * .2)",
+                }}
+              >
+                <b>{title ? title : "Title"}</b>
+              </header>
+              <p>
+                {fields.map((field) => (
+                  <div key={field.id}>
+                    <strong>{field.keyword}</strong> {field.description}
                   </div>
+                ))}
+              </p>
+            </article>
+          ) : (
+            <pre style={{ position: "relative" }}>
+              <code>
+                {`{panel:title=${title}}`}
+                {fields.map((field) => (
+                  <div key={field.id}>
+                    *{field.keyword}* {field.description}
+                  </div>
+                ))}
+                {`{panel}`}
+              </code>
+              <div
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  cursor: "pointer",
+                }}
+              >
+                {hasJustCopied ? (
+                  <CheckIcon />
+                ) : (
+                  <ClipboardIcon onClick={copyToClipboard} />
                 )}
               </div>
-              <a href="https://remix.run">
-                <img
-                  src="https://user-images.githubusercontent.com/1500684/158298926-e45dafff-3544-4b69-96d6-d3bcc33fc76a.svg"
-                  alt="Remix"
-                  className="mx-auto mt-16 w-full max-w-[12rem] md:max-w-[16rem]"
-                />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="mx-auto max-w-7xl px-4 py-2 sm:px-6 lg:px-8">
-          <div className="mt-6 flex flex-wrap justify-center gap-8">
-            {[
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764397-ccd8ea10-b8aa-4772-a99b-35de937319e1.svg",
-                alt: "Fly.io",
-                href: "https://fly.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764395-137ec949-382c-43bd-a3c0-0cb8cb22e22d.svg",
-                alt: "SQLite",
-                href: "https://sqlite.org",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764484-ad64a21a-d7fb-47e3-8669-ec046da20c1f.svg",
-                alt: "Prisma",
-                href: "https://prisma.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764276-a516a239-e377-4a20-b44a-0ac7b65c8c14.svg",
-                alt: "Tailwind",
-                href: "https://tailwindcss.com",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157764454-48ac8c71-a2a9-4b5e-b19c-edef8b8953d6.svg",
-                alt: "Cypress",
-                href: "https://www.cypress.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772386-75444196-0604-4340-af28-53b236faa182.svg",
-                alt: "MSW",
-                href: "https://mswjs.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772447-00fccdce-9d12-46a3-8bb4-fac612cdc949.svg",
-                alt: "Vitest",
-                href: "https://vitest.dev",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772662-92b0dd3a-453f-4d18-b8be-9fa6efde52cf.png",
-                alt: "Testing Library",
-                href: "https://testing-library.com",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772934-ce0a943d-e9d0-40f8-97f3-f464c0811643.svg",
-                alt: "Prettier",
-                href: "https://prettier.io",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157772990-3968ff7c-b551-4c55-a25c-046a32709a8e.svg",
-                alt: "ESLint",
-                href: "https://eslint.org",
-              },
-              {
-                src: "https://user-images.githubusercontent.com/1500684/157773063-20a0ed64-b9f8-4e0b-9d1e-0b65a3d4a6db.svg",
-                alt: "TypeScript",
-                href: "https://typescriptlang.org",
-              },
-            ].map((img) => (
-              <a
-                key={img.href}
-                href={img.href}
-                className="flex h-16 w-32 justify-center p-1 grayscale transition hover:grayscale-0 focus:grayscale-0"
-              >
-                <img alt={img.alt} src={img.src} className="object-contain" />
-              </a>
-            ))}
-          </div>
-        </div>
+            </pre>
+          )}
+        </section>
       </div>
     </main>
+  );
+}
+
+function FieldInput({
+  value,
+  onChange,
+}: {
+  value: Field;
+  onChange: (field: Field) => void;
+}) {
+  const selectRef = React.useRef<HTMLSelectElement>(null);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleChange = () => {
+    const keyword = selectRef.current?.value || "";
+    const description = inputRef.current?.value || "";
+    if (!isAllowedKeyword(keyword)) {
+      return;
+    }
+    onChange({ ...value, keyword, description });
+  };
+
+  return (
+    <div className="grid" style={{ gridTemplateColumns: "1.25fr 4fr" }}>
+      <select
+        name="keywords"
+        defaultValue={value.keyword}
+        onChange={handleChange}
+        ref={selectRef}
+      >
+        <option value="Given">Given</option>
+        <option value="Only">Only</option>
+        <option value="Then">Then</option>
+        <option value="When">When</option>
+        <option value="And">And</option>
+        <option value="But">But</option>
+      </select>
+      <input
+        defaultValue={value.description}
+        type="text"
+        name="description"
+        onChange={handleChange}
+        ref={inputRef}
+        placeholder="Describe the condition"
+      />
+    </div>
+  );
+}
+
+function isAllowedKeyword(keyword: string): keyword is Field["keyword"] {
+  return KEYWORDS.includes(keyword as any);
+}
+
+function ClipboardIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="24px"
+      height="24px"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z"
+        stroke="#73828C"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H12H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15"
+        stroke="#73828C"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      width="24px"
+      height="24px"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <g id="Interface / Check">
+        <path
+          id="Vector"
+          d="M6 12L10.2426 16.2426L18.727 7.75732"
+          stroke="#73828C"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </g>
+    </svg>
   );
 }
