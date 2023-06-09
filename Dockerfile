@@ -12,7 +12,8 @@ WORKDIR /app
 # Set production environment
 ENV NODE_ENV=production
 
-ARG PNPM_VERSION=7.29.3
+# TODO: read from package.json
+ARG PNPM_VERSION=7.33.0
 RUN npm install -g pnpm@$PNPM_VERSION
 
 
