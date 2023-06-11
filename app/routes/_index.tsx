@@ -1,5 +1,6 @@
 import * as React from "react";
-import type { V2_MetaFunction } from "@remix-run/node";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import { handleVitalRedirects } from "~/http";
 import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
 
 export const meta: V2_MetaFunction = () => [{ title: "BDD Wizard" }];
@@ -18,6 +19,11 @@ type Field = {
   keyword: (typeof KEYWORDS)[number];
   description: string;
 };
+
+export async function loader({ request }: LoaderArgs) {
+  await handleVitalRedirects(request);
+  return null;
+}
 
 export default function Index() {
   const [title, setTitle] = React.useState("");
