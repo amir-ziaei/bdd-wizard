@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
-import { CheckIcon, ClipboardIcon } from "~/components/icons";
+import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
 
 export const meta: V2_MetaFunction = () => [{ title: "BDD Wizard" }];
 
