@@ -121,17 +121,18 @@ export default function Index() {
               >
                 <b>{title ? title : "Title"}</b>
               </header>
-              <p>
+              <p data-testid="preview-output">
                 {fields.map((field) => (
-                  <div key={field.id}>
+                  <React.Fragment key={field.id}>
                     <strong>{field.keyword}</strong> {field.description}
-                  </div>
+                    <br />
+                  </React.Fragment>
                 ))}
               </p>
             </article>
           ) : (
             <pre style={{ position: "relative" }}>
-              <code>
+              <code data-testid="jira-output">
                 {`{panel:title=${title}}`}
                 {fields.map((field) => (
                   <div key={field.id}>
@@ -151,7 +152,16 @@ export default function Index() {
                 {hasJustCopied ? (
                   <CheckIcon />
                 ) : (
-                  <ClipboardIcon onClick={copyToClipboard} />
+                  <ClipboardIcon
+                    aria-label="Copy"
+                    role="button"
+                    style={{
+                      backgroundColor: "transparent",
+                      padding: 0,
+                      border: "none",
+                    }}
+                    onClick={copyToClipboard}
+                  />
                 )}
               </div>
             </pre>
