@@ -4,7 +4,14 @@ import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
 
 export const meta: V2_MetaFunction = () => [{ title: "BDD Wizard" }];
 
-const KEYWORDS = ["Given", "Only", "Then", "When", "And", "But"] as const;
+export const KEYWORDS = [
+  "Given",
+  "Only",
+  "Then",
+  "When",
+  "And",
+  "But",
+] as const;
 
 type Field = {
   id: string;
