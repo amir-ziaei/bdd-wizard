@@ -84,11 +84,12 @@ export default function Index() {
                 placeholder="What is the scenario about?"
               />
             </label>
-            {fields.map((field) => (
+            {fields.map((field, idx) => (
               <FieldInput
                 key={field.id}
                 value={field}
                 onChange={handleFieldChange}
+                index={idx}
               />
             ))}
           </form>
@@ -164,9 +165,11 @@ export default function Index() {
 function FieldInput({
   value,
   onChange,
+  index,
 }: {
   value: Field;
   onChange: (field: Field) => void;
+  index: number;
 }) {
   const selectRef = React.useRef<HTMLSelectElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -187,6 +190,7 @@ function FieldInput({
         defaultValue={value.keyword}
         onChange={handleChange}
         ref={selectRef}
+        aria-label={`Keyword of the field ${index + 1}`}
       >
         <option value="Given">Given</option>
         <option value="Only">Only</option>
@@ -202,6 +206,7 @@ function FieldInput({
         onChange={handleChange}
         ref={inputRef}
         placeholder="Describe the condition"
+        aria-label={`Description of the field ${index + 1}`}
       />
     </div>
   );
