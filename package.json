@@ -15,6 +15,7 @@
     "test": "vitest",
     "test:e2e": "npm run test:e2e:dev --silent",
     "test:e2e:dev": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
     "test:e2e:gen": "playwright codegen",
     "pretest:e2e:run": "pnpm build",
     "test:e2e:run": "cross-env CI=true playwright test",
