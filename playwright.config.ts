@@ -76,7 +76,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: process.env.CI
-      ? `cross-env PORT=${PORT} pnpm start`
+      ? `cross-env PORT=${PORT} pnpm start:mocks`
       : `cross-env PORT=${PORT} pnpm dev`,
     port: Number(PORT),
     reuseExistingServer: true,

@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { faker } from "@faker-js/faker";
-import { KEYWORDS } from "~/routes/_index";
+import { KEYWORDS } from "~/routes/_index.tsx";
 
 test("smoke", async ({ page }) => {
   const scenario = buildScenario();
