@@ -52,6 +52,16 @@ app.use((req, res, next) => {
   }
 });
 
+// use only www. for SEO reasons
+app.use((req, res, next) => {
+  const host = getHost(req);
+  if (!host.startsWith("www.")) {
+    const newHost = `www.${host}`;
+    return res.redirect(301, req.protocol + "://" + newHost + req.originalUrl);
+  }
+  next();
+});
+
 app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
