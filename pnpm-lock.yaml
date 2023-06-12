@@ -75,6 +75,8 @@ dependencies:
   chokidar: 3.5.3
   close-with-grace: 1.2.0
   compression: 1.7.4
+  cross-env: 7.0.3
+  dotenv: 16.1.4
   execa: 7.1.1
   express: 4.18.2
   get-port: 7.0.0
@@ -110,8 +112,6 @@ devDependencies:
   '@vitest/coverage-c8': 0.30.1_vitest@0.30.1
   autoprefixer: 10.4.14_postcss@8.4.24
   c8: 7.14.0
-  cross-env: 7.0.3
-  dotenv: 16.1.4
   esbuild: 0.18.1
   eslint: 8.42.0
   eslint-config-prettier: 8.8.0_eslint@8.42.0
@@ -4088,7 +4088,7 @@ packages:
     hasBin: true
     dependencies:
       cross-spawn: 7.0.3
-    dev: true
+    dev: false
 
   /cross-spawn/6.0.5:
     resolution: {integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==}
@@ -4392,7 +4392,6 @@ packages:
   /dotenv/16.1.4:
     resolution: {integrity: sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==}
     engines: {node: '>=12'}
-    dev: true
 
   /duplexer/0.1.2:
     resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
