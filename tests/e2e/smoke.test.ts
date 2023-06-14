@@ -80,20 +80,39 @@ test("smoke", async ({ page }) => {
 type Scenario = {
   title: string;
   fields: Array<{
-    keyword: string;
+    keyword: (typeof KEYWORDS)[number];
     description: string;
   }>;
 };
 
 function buildScenario(overrides?: Partial<Scenario>): Scenario {
+  let hasAtLeastOneLongDescription = false;
+  let numOfFields = faker.number.int({ min: 3, max: 7 });
   return {
     title: faker.lorem.sentence(),
     fields: Array.from({
-      length: faker.datatype.number({ min: 3, max: 7 }),
-    }).map(() => ({
-      keyword: faker.helpers.arrayElement(KEYWORDS),
-      description: faker.lorem.sentence(),
-    })),
+      length: numOfFields,
+    }).map((_, idx) => {
+      const isLast = idx === numOfFields - 1;
+      let description = faker.lorem.sentence();
+
+      // 25% chance of having a long description
+      if (faker.datatype.boolean() && faker.datatype.boolean()) {
+        description = faker.lorem.paragraphs();
+        hasAtLeastOneLongDescription = true;
+      }
+
+      // but we must have at least one long description
+      if (isLast && !hasAtLeastOneLongDescription) {
+        description = faker.lorem.paragraphs();
+      }
+
+      return {
+        keyword: faker.helpers.arrayElement(KEYWORDS),
+        description,
+        ...overrides,
+      };
+    }),
     ...overrides,
   };
 }

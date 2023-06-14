@@ -1,6 +1,7 @@
 import * as React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
+import { FitToContentTextArea } from "~/components/form-elements.tsx";
 
 export const meta: V2_MetaFunction = () => [{ title: "BDD Wizard" }];
 
@@ -189,7 +190,7 @@ function FieldInput({
   index: number;
 }) {
   const selectRef = React.useRef<HTMLSelectElement>(null);
-  const inputRef = React.useRef<HTMLInputElement>(null);
+  const inputRef = React.useRef<HTMLTextAreaElement>(null);
 
   const handleChange = () => {
     const keyword = selectRef.current?.value || "";
@@ -216,15 +217,16 @@ function FieldInput({
         <option value="And">And</option>
         <option value="But">But</option>
       </select>
-      <input
+      <FitToContentTextArea
+        ref={inputRef}
         defaultValue={value.description}
-        type="text"
         name="description"
         onChange={handleChange}
-        ref={inputRef}
         placeholder="Describe the condition"
         aria-label={`Description of the field ${index + 1}`}
-      />
+        rows={1}
+        style={{ resize: "none" }}
+      ></FitToContentTextArea>
     </div>
   );
 }
