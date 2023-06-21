@@ -3,7 +3,16 @@ import type { V2_MetaFunction } from "@remix-run/node";
 import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
 import { FitToContentTextArea } from "~/components/form-elements.tsx";
 
-export const meta: V2_MetaFunction = () => [{ title: "BDD Wizard" }];
+export const meta: V2_MetaFunction = () => [
+  {
+    title: "BDD Wizard",
+  },
+  {
+    name: "description",
+    content:
+      "BDD Wizard helps you write behavior-driven scenarios and generate Jira-specific output that you can copy-paste directly into your tickets.",
+  },
+];
 
 export const KEYWORDS = [
   "Given",
