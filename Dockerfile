@@ -39,6 +39,9 @@ RUN pnpm prune --prod
 # Final stage for app image
 FROM base
 
+ENV FLY="true"
+ENV NODE_ENV="production"
+
 # Copy built application
 COPY --from=build /app /app
 

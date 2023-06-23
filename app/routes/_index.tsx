@@ -2,6 +2,7 @@ import * as React from "react";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
 import { FitToContentTextArea } from "~/components/form-elements.tsx";
+import { ThemeSelect } from "./resources.theme.tsx";
 
 export const meta: V2_MetaFunction = () => [
   {
@@ -110,6 +111,9 @@ export default function Index() {
             >
               Report a bug
             </a>
+          </li>
+          <li>
+            <ThemeSelect />
           </li>
           <li>
             <a

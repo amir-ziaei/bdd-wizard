@@ -96,33 +96,32 @@ app.use((_, res, next) => {
   next();
 });
 
-// TODO: we'll need to reenable CSP later
-// app.use(
-//   helmet({
-//     crossOriginEmbedderPolicy: false,
-//     contentSecurityPolicy: {
-//       directives: {
-//         "connect-src": [MODE === "development" ? "ws:" : null, "'self'"].filter(
-//           Boolean
-//         ),
-//         "font-src": ["'self'"],
-//         "frame-src": ["'self'"],
-//         "img-src": ["'self'", "data:"],
-//         "script-src": [
-//           "'strict-dynamic'",
-//           "'self'",
-//           // @ts-expect-error
-//           (_, res) => `'nonce-${res.locals.cspNonce}'`,
-//         ],
-//         "script-src-attr": [
-//           // @ts-expect-error
-//           (_, res) => `'nonce-${res.locals.cspNonce}'`,
-//         ],
-//         "upgrade-insecure-requests": null,
-//       },
-//     },
-//   })
-// );
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        "connect-src": [MODE === "development" ? "ws:" : null, "'self'"].filter(
+          Boolean
+        ),
+        "font-src": ["'self'"],
+        "frame-src": ["'self'"],
+        "img-src": ["'self'", "data:"],
+        "script-src": [
+          "'strict-dynamic'",
+          "'self'",
+          // @ts-expect-error
+          (_, res) => `'nonce-${res.locals.cspNonce}'`,
+        ],
+        "script-src-attr": [
+          // @ts-expect-error
+          (_, res) => `'nonce-${res.locals.cspNonce}'`,
+        ],
+        "upgrade-insecure-requests": null,
+      },
+    },
+  })
+);
 
 function getRequestHandler(build: ServerBuild): RequestHandler {
   function getLoadContext(_: any, res: any) {
