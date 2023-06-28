@@ -12,6 +12,6 @@ export default {
     v2_errorBoundary: true,
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,
-    unstable_dev: true,
+    v2_dev: true,
   },
 };
