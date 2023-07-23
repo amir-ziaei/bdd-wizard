@@ -3,9 +3,11 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "bdd-wizard"
+app = "bdd-wizard-staging"
 primary_region = "waw"
 
 [http_service]
   internal_port = 3000
   force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
