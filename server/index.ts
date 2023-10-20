@@ -4,7 +4,7 @@ import express from "express";
 import chokidar from "chokidar";
 import compression from "compression";
 import morgan from "morgan";
-import address from "address";
+import { ip as ipAddress } from 'address'
 import closeWithGrace from "close-with-grace";
 import helmet from "helmet";
 import crypto from "crypto";
@@ -161,7 +161,7 @@ const server = app.listen(portToUse, () => {
   console.log(`🚀  We have liftoff!`);
   const localUrl = `http://localhost:${portUsed}`;
   let lanUrl: string | null = null;
-  const localIp = address.ip();
+  const localIp = ipAddress() ?? 'Unknown';
   // Check if the address is a private ip
   // https://en.wikipedia.org/wiki/Private_network#Private_IPv4_address_spaces
   // https://github.com/facebook/create-react-app/blob/d960b9e38c062584ff6cfb1a70e1512509a966e7/packages/react-dev-utils/WebpackDevServerUtils.js#LL48C9-L54C10

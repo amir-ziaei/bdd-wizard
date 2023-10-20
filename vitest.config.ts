@@ -1,12 +1,10 @@
 /// <reference types="vitest" />
-/// <reference types="vite/client" />
 
-import { react } from "./tests/setup/vitejs-plugin-react.cjs";
+import react from '@vitejs/plugin-react'
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react()],
   test: {
     include: ["./app/**/*.test.{ts,tsx}"],
     environment: "jsdom",
