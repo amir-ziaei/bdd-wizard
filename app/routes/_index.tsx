@@ -1,10 +1,10 @@
 import * as React from "react";
-import type { V2_MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { CheckIcon, ClipboardIcon } from "~/components/icons.tsx";
 import { FitToContentTextArea } from "~/components/form-elements.tsx";
 import { ThemeSelect } from "./resources.theme.tsx";
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   {
     title: "BDD Wizard",
   },

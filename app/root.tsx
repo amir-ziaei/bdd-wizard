@@ -1,4 +1,8 @@
-import { json, type LoaderArgs, type LinksFunction } from "@remix-run/node";
+import {
+  json,
+  type LinksFunction,
+  type DataFunctionArgs,
+} from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -22,7 +26,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: DataFunctionArgs) {
   return json({
     requestInfo: {
       hints: getHints(request),
